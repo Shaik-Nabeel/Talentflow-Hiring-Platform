@@ -38,6 +38,10 @@ export function Topbar() {
       </div>
 
       <div className="flex items-center gap-2">
+        {/* Demo badge when Mirage mock server is enabled for this build */}
+        {(import.meta.env.DEV || import.meta.env.VITE_ENABLE_MIRAGE === '1') && (
+          <div className="mr-2 px-2 py-1 rounded-full bg-yellow-50 text-yellow-800 text-xs font-medium">Demo</div>
+        )}
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button
             variant="ghost"

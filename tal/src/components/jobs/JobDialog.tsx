@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import type { Job } from '@/lib/db';
+import * as api from '@/lib/api';
 
 interface JobDialogProps {
   open: boolean;
@@ -45,21 +46,11 @@ export function JobDialog({ open, onOpenChange, job }: JobDialogProps) {
 
   const mutation = useMutation({
     mutationFn: async (data: JobFormData) => {
-      const url = job ? `/api/jobs/${job.id}` : '/api/jobs';
-      const method = job ? 'PATCH' : 'POST';
-      
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: data.title,
-          description: data.description,
-          tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to save job');
-      return response.json();
+      return api.createOrUpdateJob({
+        title: data.title,
+        description: data.description,
+        tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
+      }, job?.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['jobs'] });

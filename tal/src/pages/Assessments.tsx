@@ -2,19 +2,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
+import * as api from '@/lib/api';
 import { AssessmentBuilder } from '@/components/assessments/AssessmentBuilder';
 import { Button } from '@/components/ui/button';
 
 async function fetchJobs() {
-  const response = await fetch('/api/jobs?page=1&pageSize=100&status=active');
-  if (!response.ok) throw new Error('Failed to fetch jobs');
-  return response.json();
+  return api.fetchJobs({ page: 1, pageSize: 100, status: 'active' });
 }
 
 async function fetchAssessments() {
-  const response = await fetch('/api/assessments');
-  if (!response.ok) throw new Error('Failed to fetch assessments');
-  return response.json();
+  return api.fetchAssessments();
 }
 
 export default function Assessments() {

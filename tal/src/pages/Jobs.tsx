@@ -6,21 +6,13 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { db } from '@/lib/db';
+import * as api from '@/lib/api';
 import { JobDialog } from '@/components/jobs/JobDialog';
 import { JobList } from '@/components/jobs/JobList';
 import type { Job } from '@/lib/db';
 
 async function fetchJobs(page: number, search: string, status: string, sort: string) {
-  const params = new URLSearchParams({
-    page: page.toString(),
-    pageSize: '10',
-    search,
-    status,
-    sort,
-  });
-  const response = await fetch(`/api/jobs?${params}`);
-  if (!response.ok) throw new Error('Failed to fetch jobs');
-  return response.json();
+  return api.fetchJobs({ page, pageSize: 10, search, status, sort });
 }
 
 export default function Jobs() {
@@ -45,15 +37,7 @@ export default function Jobs() {
 
   const toggleArchiveMutation = useMutation({
     mutationFn: async (job: Job) => {
-      const response = await fetch(`/api/jobs/${job.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          status: job.status === 'active' ? 'archived' : 'active',
-        }),
-      });
-      if (!response.ok) throw new Error('Failed to update job');
-      return response.json();
+      return api.patchJob(job.id, { status: job.status === 'active' ? 'archived' : 'active' });
     },
     onSuccess: (data) => {
       // Ensure local Dexie DB reflects the updated job so components using useLiveQuery

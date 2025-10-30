@@ -6,16 +6,14 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
+import * as api from '@/lib/api';
+
 async function fetchCandidate(id: string) {
-  const response = await fetch(`/api/candidates/${id}`);
-  if (!response.ok) throw new Error('Failed to fetch candidate');
-  return response.json();
+  return api.fetchCandidate(id);
 }
 
 async function fetchTimeline(id: string) {
-  const response = await fetch(`/api/candidates/${id}/timeline`);
-  if (!response.ok) throw new Error('Failed to fetch timeline');
-  return response.json();
+  return api.fetchTimeline(id);
 }
 
 export default function CandidateDetail() {

@@ -8,16 +8,14 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { JobDialog } from '@/components/jobs/JobDialog';
 
+import * as api from '@/lib/api';
+
 async function fetchJob(id: string) {
-  const response = await fetch(`/api/jobs/${id}`);
-  if (!response.ok) throw new Error('Failed to fetch job');
-  return response.json();
+  return api.fetchJob(id);
 }
 
 async function fetchJobCandidates(jobId: string) {
-  const response = await fetch(`/api/candidates?jobId=${jobId}&page=1&pageSize=1000`);
-  if (!response.ok) throw new Error('Failed to fetch candidates');
-  return response.json();
+  return api.fetchCandidates({ page: 1, pageSize: 1000, jobId });
 }
 
 export default function JobDetail() {

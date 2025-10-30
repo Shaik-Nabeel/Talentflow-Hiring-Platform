@@ -21,7 +21,11 @@ import { seedDatabase } from "@/lib/seed-data";
 
 const queryClient = new QueryClient();
 
-if (import.meta.env.DEV) {
+// Start MirageJS server in development by default. For demo/staging deployments
+// (for example on Vercel) you can enable the mock server by setting
+// VITE_ENABLE_MIRAGE=1 in the environment. This keeps production safe while
+// allowing demo deployments to ship with working sample data.
+if (import.meta.env.DEV || import.meta.env.VITE_ENABLE_MIRAGE === '1') {
   makeServer();
 }
 

@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { SectionEditor } from './SectionEditor';
+import * as api from '@/lib/api';
 import { AssessmentPreview } from './AssessmentPreview';
 import type { Assessment, AssessmentSection } from '@/lib/db';
 
@@ -14,9 +15,7 @@ interface AssessmentBuilderProps {
 }
 
 async function fetchAssessment(jobId: string) {
-  const response = await fetch(`/api/assessments/${jobId}`);
-  if (!response.ok) throw new Error('Failed to fetch assessment');
-  return response.json();
+  return api.fetchAssessmentByJob(jobId);
 }
 
 export function AssessmentBuilder({ jobId }: AssessmentBuilderProps) {
@@ -39,13 +38,7 @@ export function AssessmentBuilder({ jobId }: AssessmentBuilderProps) {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch(`/api/assessments/${jobId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, sections }),
-      });
-      if (!response.ok) throw new Error('Failed to save assessment');
-      return response.json();
+      return api.saveAssessment(jobId, { title, sections });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessment', jobId] });

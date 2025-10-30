@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
+import * as api from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { KanbanColumn } from './KanbanColumn';
@@ -26,9 +27,7 @@ const STAGE_COLOR_HEX: Record<string, string> = {
 };
 
 async function fetchAllCandidates() {
-  const response = await fetch('/api/candidates?page=1&pageSize=1000');
-  if (!response.ok) throw new Error('Failed to fetch candidates');
-  return response.json();
+  return api.fetchCandidates({ page: 1, pageSize: 1000 });
 }
 
 export function CandidateKanban() {
@@ -58,13 +57,7 @@ export function CandidateKanban() {
 
   const updateStageMutation = useMutation({
     mutationFn: async ({ id, stage }: { id: string; stage: string }) => {
-      const response = await fetch(`/api/candidates/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stage }),
-      });
-      if (!response.ok) throw new Error('Failed to update stage');
-      return response.json();
+      return api.patchCandidate(id, { stage });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['candidates-kanban'] });
