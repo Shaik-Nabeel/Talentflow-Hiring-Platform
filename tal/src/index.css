@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Flow Theme - Light Mode */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    
+    /* Primary: Flow Blue #007BFF */
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 211 100% 70%;
+    
+    /* Accent: Violet Wave #6C63FF */
+    --accent: 243 100% 69%;
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 243 100% 80%;
+    
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+    
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 211 100% 50%;
+    
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 211 100% 50%;
+    
+    /* Flow Effects */
+    --gradient-flow: linear-gradient(135deg, hsl(211 100% 50%) 0%, hsl(243 100% 69%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(210 40% 98%) 0%, hsl(0 0% 100%) 100%);
+    --shadow-flow: 0 10px 40px -10px hsl(211 100% 50% / 0.3);
+    --shadow-glow: 0 0 30px hsl(211 100% 70% / 0.4);
+    
+    --radius: 1rem;
+  }
+
+  .dark {
+    /* Flow Theme - Dark Mode */
+    --background: 222 47% 5%;
+    --foreground: 210 40% 98%;
+    
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+    
+    /* Primary: Bright Flow Blue #00BFFF */
+    --primary: 195 100% 50%;
+    --primary-foreground: 222 47% 11%;
+    --primary-glow: 195 100% 70%;
+    
+    /* Accent: Light Violet #9A8CFF */
+    --accent: 248 100% 77%;
+    --accent-foreground: 222 47% 11%;
+    --accent-glow: 248 100% 85%;
+    
+    --secondary: 217 33% 18%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --muted: 217 33% 18%;
+    --muted-foreground: 215 20% 65%;
+    
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+    
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 195 100% 50%;
+    
+    /* Sidebar */
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 195 100% 50%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 18%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 18%;
+    --sidebar-ring: 195 100% 50%;
+    
+    /* Flow Effects */
+    --gradient-flow: linear-gradient(135deg, hsl(195 100% 50%) 0%, hsl(248 100% 77%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(222 47% 5%) 0%, hsl(222 47% 8%) 100%);
+    --shadow-flow: 0 10px 40px -10px hsl(195 100% 50% / 0.4);
+    --shadow-glow: 0 0 30px hsl(195 100% 70% / 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  /* Flow Animations */
+  .animate-wave {
+    animation: wave 3s ease-in-out infinite;
+  }
+  
+  .animate-flow {
+    animation: flow 4s ease-in-out infinite;
+  }
+  
+  .animate-ripple {
+    animation: ripple 0.6s ease-out;
+  }
+  
+  @keyframes wave {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-4px) scale(1.02); }
+  }
+  
+  @keyframes flow {
+    0%, 100% { 
+      background-position: 0% 50%;
+    }
+    50% { 
+      background-position: 100% 50%;
+    }
+  }
+  
+  @keyframes ripple {
+    0% {
+      box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4);
+    }
+    100% {
+      box-shadow: 0 0 0 20px hsl(var(--primary) / 0);
+    }
+  }
+  
+  /* Glassmorphism */
+  .glass {
+    background: hsl(var(--card) / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  /* Flow Gradient */
+  .bg-flow {
+    background: var(--gradient-flow);
+    background-size: 200% 200%;
+  }
+  
+  /* Hover Glow */
+  .hover-glow {
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .hover-glow:hover {
+    box-shadow: var(--shadow-glow);
+  }
+}
