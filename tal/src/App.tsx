@@ -18,6 +18,7 @@ import Settings from "./pages/Settings";
 import Notifications from "./pages/Notifications";
 import { makeServer } from "@/lib/mirage-server";
 import { seedDatabase } from "@/lib/seed-data";
+import DiagnosticsOverlay from '@/components/layout/DiagnosticsOverlay';
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <DiagnosticsOverlay />
           <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />

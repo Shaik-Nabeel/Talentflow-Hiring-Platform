@@ -1,4 +1,6 @@
 import { db } from './db';
+// lightweight in-memory diagnostics buffer (kept across imports during session)
+export const diagnosticsBuffer: string[] = [];
 
 async function tryFetch(path: string, opts?: RequestInit) {
   try {
@@ -7,7 +9,9 @@ async function tryFetch(path: string, opts?: RequestInit) {
     return await res.json();
   } catch (e) {
     // Network failed — let callers fall back to Dexie but log for debugging
-    console.info(`[api] network fetch failed for ${path}, falling back to local DB`);
+    const msg = `[api] network fetch failed for ${path}, falling back to local DB`;
+    console.info(msg);
+    diagnosticsBuffer.unshift(msg);
     return undefined;
   }
 }
