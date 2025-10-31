@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting…</title>
+    <script>
+      // If history API is available (SPA), rewrite URL to preserve path and let client router handle it
+      (function() {
+        try {
+          const path = location.pathname + location.search + location.hash;
+          // Replace the document with the index.html and set the path for the SPA
+          if (path && path !== '/') {
+            const newUrl = '/?redirect=' + encodeURIComponent(path);
+            location.replace(newUrl);
+          } else {
+            location.replace('/');
+          }
+        } catch (e) {
+          location.replace('/');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Redirecting… If you are not redirected, <a href="/">click here</a>.</p>
+  </body>
+</html>
