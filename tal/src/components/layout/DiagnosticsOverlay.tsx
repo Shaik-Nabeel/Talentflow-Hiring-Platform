@@ -1,6 +1,17 @@
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/db';
 import { diagnosticsBuffer } from '@/lib/api';
+import { seedDatabase } from '@/lib/seed-data';
+import { makeServer, stopServer, serverRunning } from '@/lib/mirage-server';
+
+async function testApi() {
+  try {
+    const res = await fetch('/api/jobs?page=1&pageSize=1');
+    return { ok: res.ok, status: res.status, body: await res.text() };
+  } catch (e: any) {
+    return { ok: false, status: 0, body: String(e) };
+  }
+}
 
 export default function DiagnosticsOverlay() {
   const [counts, setCounts] = useState({ jobs: 0, candidates: 0, assessments: 0 });
@@ -34,6 +45,47 @@ export default function DiagnosticsOverlay() {
           <div style={{ fontSize: 12 }}><strong>{counts.jobs}</strong><div style={{ fontSize: 10, color: '#6b7280' }}>Jobs</div></div>
           <div style={{ fontSize: 12 }}><strong>{counts.candidates}</strong><div style={{ fontSize: 10, color: '#6b7280' }}>Candidates</div></div>
           <div style={{ fontSize: 12 }}><strong>{counts.assessments}</strong><div style={{ fontSize: 10, color: '#6b7280' }}>Assessments</div></div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
+          <button
+            onClick={async () => {
+              await seedDatabase(true);
+              const jobs = await db.jobs.count();
+              const candidates = await db.candidates.count();
+              const assessments = await db.assessments.count();
+              setCounts({ jobs, candidates, assessments });
+            }}
+            style={{ fontSize: 12, padding: '6px 8px', borderRadius: 6, border: '1px solid #e5e7eb', background: '#fff' }}
+          >
+            Seed
+          </button>
+
+          <button
+            onClick={async () => {
+              if (serverRunning()) {
+                stopServer();
+              } else {
+                makeServer();
+              }
+              setTimeout(() => {
+                setLogs(diagnosticsBuffer.slice(0, 10));
+              }, 300);
+            }}
+            style={{ fontSize: 12, padding: '6px 8px', borderRadius: 6, border: '1px solid #e5e7eb', background: '#fff' }}
+          >
+            {serverRunning() ? 'Stop Mirage' : 'Start Mirage'}
+          </button>
+
+          <button
+            onClick={async () => {
+              const r = await testApi();
+              setLogs(l => [`testApi: ok=${r.ok} status=${r.status}`, ...l].slice(0, 10));
+            }}
+            style={{ fontSize: 12, padding: '6px 8px', borderRadius: 6, border: '1px solid #e5e7eb', background: '#fff' }}
+          >
+            Test API
+          </button>
         </div>
 
         <div style={{ maxHeight: 140, overflow: 'auto' }}>

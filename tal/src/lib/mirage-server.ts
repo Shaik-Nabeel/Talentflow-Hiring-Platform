@@ -20,8 +20,10 @@ const simulateLatency = () => {
 
 const shouldSimulateError = () => Math.random() < ERROR_RATE;
 
+let _server: any = null;
+
 export function makeServer() {
-  return createServer({
+  _server = createServer({
     models: {
       job: Model,
       candidate: Model,
@@ -88,6 +90,7 @@ Location: ${faker.helpers.arrayElement(['Remote', 'Hybrid', 'On-site'])} (${fake
             { min: 1, max: 3 }
           );
         },
+        
         order(i: number) {
           return i;
         },
@@ -498,4 +501,17 @@ Location: ${faker.helpers.arrayElement(['Remote', 'Hybrid', 'On-site'])} (${fake
       });
     },
   });
+}
+
+export function stopServer() {
+  if (_server) {
+    try {
+      _server.shutdown();
+    } catch (e) {}
+    _server = null;
+  }
+}
+
+export function serverRunning() {
+  return !!_server;
 }
