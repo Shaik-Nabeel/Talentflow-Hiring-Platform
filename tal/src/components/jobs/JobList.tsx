@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,6 +14,10 @@ interface JobListProps {
 
 export function JobList({ jobs, onEdit, onToggleArchive }: JobListProps) {
   const [optimisticJobs, setOptimisticJobs] = useState<Job[]>(jobs);
+  // Keep optimisticJobs in sync when the parent provides new jobs (e.g., after filtering)
+  useEffect(() => {
+    setOptimisticJobs(jobs);
+  }, [jobs]);
   const queryClient = useQueryClient();
   const { toast } = useToast();
 

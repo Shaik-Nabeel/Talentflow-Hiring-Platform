@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import * as api from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
@@ -116,9 +116,48 @@ export function CandidateKanban() {
     return <div className="text-center py-8">Loading...</div>;
   }
 
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  // Map vertical wheel to horizontal scroll so users can scroll columns with mouse wheel
+  const onWheel = (e: React.WheelEvent) => {
+    const el = containerRef.current;
+    if (!el) return;
+    // If there's vertical scroll, translate it to horizontal
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      el.scrollLeft += e.deltaY;
+      e.preventDefault();
+    }
+  };
+
+  // Keyboard navigation: left/right arrows move the container horizontally by viewport width
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (e.key === 'ArrowRight') {
+      el.scrollLeft += el.clientWidth * 0.7;
+      e.preventDefault();
+    } else if (e.key === 'ArrowLeft') {
+      el.scrollLeft -= el.clientWidth * 0.7;
+      e.preventDefault();
+    } else if (e.key === 'Home') {
+      el.scrollLeft = 0;
+      e.preventDefault();
+    } else if (e.key === 'End') {
+      el.scrollLeft = el.scrollWidth;
+      e.preventDefault();
+    }
+  };
+
   return (
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      <div
+        ref={containerRef}
+        tabIndex={0}
+        onWheel={onWheel}
+        onKeyDown={onKeyDown}
+        className="flex gap-4 overflow-x-auto pb-4"
+        aria-label="Kanban columns"
+      >
         {STAGES.map((stage) => (
           <KanbanColumn
             key={stage.id}
