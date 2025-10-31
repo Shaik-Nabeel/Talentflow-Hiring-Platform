@@ -2,8 +2,14 @@ import { createServer, Model, Factory, Response } from 'miragejs';
 import { faker } from '@faker-js/faker';
 import { db, Job, Candidate, Assessment, Timeline } from './db';
 
-const LATENCY = { min: 200, max: 1200 };
-const ERROR_RATE = 0.05;
+// Default latency and error rate for development; override to faster, no-error
+// behavior when demo mode is enabled so previews are snappy and reliable.
+const DEFAULT_LATENCY = { min: 200, max: 1200 };
+const DEFAULT_ERROR_RATE = 0.05;
+
+const isDemo = import.meta.env.VITE_ENABLE_MIRAGE === '1';
+const LATENCY = isDemo ? { min: 20, max: 80 } : DEFAULT_LATENCY;
+const ERROR_RATE = isDemo ? 0 : DEFAULT_ERROR_RATE;
 
 const simulateLatency = () => {
   return new Promise(resolve => {
