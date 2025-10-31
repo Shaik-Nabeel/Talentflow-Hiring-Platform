@@ -89,8 +89,9 @@ Location: ${faker.helpers.arrayElement(['Remote', 'Hybrid', 'On-site'])} (${fake
             ['Engineering', 'Design', 'Marketing', 'Sales', 'Product', 'Remote', 'Onsite'],
             { min: 1, max: 3 }
           );
-        },
-        
+        }
+        ,
+
         order(i: number) {
           return i;
         },
@@ -501,13 +502,18 @@ Location: ${faker.helpers.arrayElement(['Remote', 'Hybrid', 'On-site'])} (${fake
       });
     },
   });
+  return _server;
 }
 
 export function stopServer() {
   if (_server) {
     try {
+      // Mirage server exposes shutdown() to stop it
+      // @ts-ignore
       _server.shutdown();
-    } catch (e) {}
+    } catch (e) {
+      // ignore errors on shutdown
+    }
     _server = null;
   }
 }
